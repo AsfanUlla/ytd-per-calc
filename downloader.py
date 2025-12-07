@@ -82,7 +82,7 @@ class Downloader(object):
                 async with aiofiles.open(filepath, mode="wb") as f:
                     async for chunk in response.content.iter_chunked(8192):
                         await f.write(chunk)
-                print(f"data saved to {filepath}")
+                print(f"\nDownload saved to {filepath}")
 
                 return dict(
                     url=url,
