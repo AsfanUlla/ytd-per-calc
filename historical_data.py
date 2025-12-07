@@ -65,9 +65,8 @@ def calculate_ytd_returns(df, exchange):
         print(f"\nSuccessfully saved data {exchange.upper()} tickers to {DATA_FOLDER.joinpath(f"{exchange}.xlsx")}")
     except Exception as e:
         print(f"Failed to export to Excel: {e}")
-        print(f"Saving CSV to: {DATA_FOLDER.joinpath(f"{exchange}.csv")}")
-        merge_df.to_csv(DATA_FOLDER.joinpath(f"{exchange}.csv"))
-
+    # print(f"Saving CSV to: {DATA_FOLDER.joinpath(f"{exchange}.csv")}")
+    # merge_df.to_csv(DATA_FOLDER.joinpath(f"{exchange}.csv"))
 
 class HistoricalData:
 
