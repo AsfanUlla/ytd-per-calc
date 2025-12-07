@@ -16,10 +16,8 @@ def get_ticker_list():
         file = TICKER_LIST_FOLDER.joinpath(f"{key}.json")
 
         if file.is_file():
-            # Construct initial table with fundamentals
-            field_order = ["name", "marketCap", "industry", "summary"]
-            # Structure: { row_key: {symbol: value} }
-            table = {key: {} for key in field_order}
+
+            table = []
 
             with open(file, 'r') as f:
                 # stream json array and extract all the symbols and fundamentals
@@ -30,40 +28,34 @@ def get_ticker_list():
                     if not symbol:
                         continue
 
-                    # Get fundamental data
-                    name = row.get("name")
-                    marketCap = row.get("marketCap")
-                    industry = row.get("industry") or row.get("sector")
+                    table.append(
+                        dict(
+                            Ticker=symbol,
+                            Name=row.get("name", "NA"),
+                            Industry=row.get("industry") or row.get("sector", "NA"),
+                            MarketCap=row.get("marketCap", "NA"),
+                            Summary="NA",
+                        )
+                    )
 
-                    # Fill table
-                    table["name"][symbol] = name
-                    table["marketCap"][symbol] = marketCap
-                    table["industry"][symbol] = industry
+            if not table:
+                continue
 
-            # Create data frame with table
-            # df = pd.DataFrame(table).T
-            # df = df.reset_index()
-            # df.rename(columns={"index": ""}, inplace=True)
-
-            # # Cache the data frame
-            # df.to_parquet(CACHE_FOLDER.joinpath(f"{key}.parquet"))
-            # print(f"Initial table - {CACHE_FOLDER.joinpath(f"{key}.parquet")}")
-
-            # Test
-            # parquet_to_csv(CACHE_FOLDER.joinpath(f"{key}.parquet"), f"{key}_test.csv")
-            #
-            #
+            df = pd.DataFrame(table)
+            df.set_index("Ticker")
+            # Cache the data frame
+            df.to_parquet(CACHE_FOLDER.joinpath(f"{key}.parquet"))
+            print(f"Initial table - {CACHE_FOLDER.joinpath(f"{key}.parquet")}")
 
 
 if __name__ == '__main__':
     CACHE_FOLDER.mkdir(parents=True, exist_ok=True)
 
     # Download Ticker list from Nasdaq Screener API
-    # download_ticker_list = Downloader()
-    # asyncio.run(download_ticker_list.run(TICKER_LIST_URLS, destination=TICKER_LIST_FOLDER))
+    asyncio.run(Downloader().run(TICKER_LIST_URLS, destination=TICKER_LIST_FOLDER))
 
-    # # Ticker symbol extraction
-    # get_ticker_list()
+    # Ticker symbol extraction
+    get_ticker_list()
 
     # Historical data download
-    asyncio.run(Historical().download_all())
+    # asyncio.run(Historical().download_all())
