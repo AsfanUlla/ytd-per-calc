@@ -4,12 +4,15 @@ import asyncio
 import pandas as pd
 
 from downloader import Downloader
-from historical_data import Historical
+from historical_data import HistoricalData
 from utils import parquet_to_csv
 
 from config import TICKER_LIST_FOLDER, TICKER_LIST_URLS, CACHE_FOLDER
 
 def get_ticker_list():
+
+    # Download Ticker list from Nasdaq Screener API
+    asyncio.run(Downloader().run(TICKER_LIST_URLS, destination=TICKER_LIST_FOLDER))
 
     # Loop through each exchange screener data file
     for key in TICKER_LIST_URLS.keys():
@@ -42,7 +45,7 @@ def get_ticker_list():
                 continue
 
             df = pd.DataFrame(table)
-            df.set_index("Ticker")
+            df.set_index("Ticker", inplace=True)
             # Cache the data frame
             df.to_parquet(CACHE_FOLDER.joinpath(f"{key}.parquet"))
             print(f"Initial table - {CACHE_FOLDER.joinpath(f"{key}.parquet")}")
@@ -51,11 +54,8 @@ def get_ticker_list():
 if __name__ == '__main__':
     CACHE_FOLDER.mkdir(parents=True, exist_ok=True)
 
-    # Download Ticker list from Nasdaq Screener API
-    asyncio.run(Downloader().run(TICKER_LIST_URLS, destination=TICKER_LIST_FOLDER))
-
     # Ticker symbol extraction
     get_ticker_list()
 
     # Historical data download
-    # asyncio.run(Historical().download_all())
+    asyncio.run(HistoricalData().download_all())
