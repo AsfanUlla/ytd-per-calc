@@ -48,7 +48,7 @@ def get_ticker_list():
             df.set_index("Ticker", inplace=True)
             # Cache the data frame
             df.to_parquet(CACHE_FOLDER.joinpath(f"{key}.parquet"))
-            print(f"Initial table - {CACHE_FOLDER.joinpath(f"{key}.parquet")}")
+            print(f"\nInitial table with fundamentals - {CACHE_FOLDER.joinpath(f"{key}.parquet")}")
 
 
 if __name__ == '__main__':
@@ -57,5 +57,5 @@ if __name__ == '__main__':
     # Ticker symbol extraction
     get_ticker_list()
 
-    # Historical data download
+    # Historical data download, calculate YTD and save
     asyncio.run(HistoricalData().download_all())
