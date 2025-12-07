@@ -5,7 +5,6 @@ import pandas as pd
 
 from downloader import Downloader
 from historical_data import HistoricalData
-from utils import parquet_to_csv
 
 from config import TICKER_LIST_FOLDER, TICKER_LIST_URLS, CACHE_FOLDER
 
