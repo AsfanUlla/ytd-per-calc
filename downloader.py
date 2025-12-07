@@ -29,7 +29,6 @@ class Downloader(object):
     async def retry_middleware(self,
         req: ClientRequest, handler: ClientHandlerType
     ) -> ClientResponse:
-        print("here")
         for attempt in range(self.retries + 1):  # Try up to 3 times
             resp = await handler(req)
 
