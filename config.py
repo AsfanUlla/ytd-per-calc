@@ -7,6 +7,9 @@ TICKER_LIST_FOLDER = DATA_FOLDER.joinpath('ticker_list')
 #NASDAQ screener api
 NASDAQ_SCREENER_API = 'https://api.nasdaq.com/api/screener/stocks?exchange={}&download=true'
 
+# NASDAQ company info api
+NASDAQ_INFO_API = 'https://api.nasdaq.com/api/company/{}/company-profile'
+
 #API to download listed tickers on NYSE, NASDAQ, AMEX
 TICKER_LIST_URLS = dict(
     nyse=NASDAQ_SCREENER_API.format('NYSE'),
